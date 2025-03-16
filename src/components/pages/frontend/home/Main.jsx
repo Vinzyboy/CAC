@@ -3,6 +3,7 @@ import { InputPhotoUpload } from "@/components/helpers/FormInputs";
 import { imgPath } from "@/components/helpers/functions-general";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Main = () => {
   const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto("");
@@ -20,17 +21,15 @@ const Main = () => {
     formData.append("image", photo);
 
     try {
-      const response = await fetch("http://localhost:5000/upload", {
-        method: "POST",
-        body: formData,
+      const response = await axios.post("http://localhost:5001/predict", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
         navigate("/Count", {
           state: {
             photo: URL.createObjectURL(photo),
-            detections: data.detections,
+            detections: response.data.detections,
           },
         });
       } else {

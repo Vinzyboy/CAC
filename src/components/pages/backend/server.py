@@ -1,27 +1,39 @@
 import pathlib
 import os
 import torch
-from flask import Flask, request, jsonify
+import io
+from flask import Flask, request, jsonify, Response
 from PIL import Image
+from flask_cors import CORS
 
 temp = pathlib.WindowsPath
 pathlib.PosixPath = temp
 
 app = Flask(__name__)
+CORS(app)  # This allows all origins (use only in development)
 
 # Load YOLOv5 Model Once
 MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "best.pt")
 model = torch.hub.load("ultralytics/yolov5", "custom", path=MODEL_PATH, force_reload=True)  # Load YOLOv5 model
 model.eval()
 
-@app.route("/predict", methods=["POST"])
+allowed_extensions = {"jpg", "jpeg", "png"}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+@app.route("/predict", methods=['GET', 'POST'])
 def predict():
     if "image" not in request.files:
         return jsonify({"error": "No image uploaded"}), 400
 
+    image = request.files["image"]
+
+    if not allowed_file(image.filename) or not image.mimetype.startswith('image/'):
+        return jsonify({"error": f"Invalid file format. Allowed formats: {', '.join(allowed_extensions)}"}), 400
+
     try:
-        image = request.files["image"]
-        img = Image.open(image).convert("RGB")
+        img = Image.open(io.BytesIO(image.read())).convert("RGB")
 
         # Perform YOLOv5 detection
         results = model(img)
@@ -38,4 +50,4 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="127.0.0.1", port=5001, debug=True)

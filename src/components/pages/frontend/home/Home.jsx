@@ -7,15 +7,7 @@ import Count from "./Count";
 
 const Home = () => {
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Banner />} />
-        <Route path="/Main" element={<Main />} />
-        <Route path="/Count" element={<Count />} />
-      </Routes>
-      {/* <Footer /> */}
-    </Router>
+    <div></div>
   );
 };
 
