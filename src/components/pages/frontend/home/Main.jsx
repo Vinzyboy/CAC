@@ -28,7 +28,7 @@ const Main = () => {
       if (response.status === 200) {
         navigate("/Count", {
           state: {
-            photo: URL.createObjectURL(photo),
+            photo: response.data.image_base64,
             detections: response.data.detections,
           },
         });

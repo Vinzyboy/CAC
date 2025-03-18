@@ -68,7 +68,7 @@ const Count = () => {
           {/* Display Image */}
           <div>
             <img
-              src={photo || `${imgPath}/banner1.png`}
+              src={`data:image/png;base64, ${photo}` || `${imgPath}/banner1.png`}
               alt="Detected Coconuts"
               className="h-[400px] border-2 border-white"
             />
