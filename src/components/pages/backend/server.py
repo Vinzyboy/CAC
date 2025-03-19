@@ -86,7 +86,6 @@ def predict():
     detected_img_bgr = cv2.cvtColor(detected_img, cv2.COLOR_RGB2BGR)
     detected_img_bgr = draw_boxes(detected_img_bgr, detections)
     base64_result = image_to_base64(detected_img_bgr)
-    print(base64_result)
 
     # Count the number of coconuts detected
     coconut_count = sum(1 for det in detections if det["name"] == "coconut")
