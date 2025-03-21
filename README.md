@@ -20,6 +20,7 @@ Before setting up the project, ensure you have the following installed:
 
 2. Navigate to the `CAC` directory and open a **Command Prompt** from there:
    - On Windows: Open the `CAC` folder in File Explorer, then **Shift + Right-click** and select **"Open Command Prompt here"** (or PowerShell/Terminal).
+
 ---
 
 ## 2. Install Dependencies
@@ -55,7 +56,7 @@ Before setting up the project, ensure you have the following installed:
    ```
 
    The backend should now be running at [http://localhost:5001](http://localhost:5001).
-   
+
 2. In a new Command Prompt, start the frontend development server:
 
    ```bash
@@ -63,10 +64,9 @@ Before setting up the project, ensure you have the following installed:
    ```
 
    The frontend should now be running at [http://localhost:3000](http://localhost:3000).
-   
+
 ---
 
 ## 4. Connecting Frontend and Backend
 
 - Ensure both the frontend and backend are running.
-

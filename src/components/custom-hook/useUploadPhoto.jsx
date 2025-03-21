@@ -13,29 +13,16 @@ const useUploadPhoto = (url) => {
     // }
   };
   const handleChangePhoto = (e) => {
-    console.log(e.target.files[0]);
-    if (!e.target.files[0]) {
-      setPhoto("");
-      dispatch(setError(false));
-      dispatch(setMessage(""));
+    if (!e || !e.target || !e.target.files || e.target.files.length === 0) {
+      setPhoto(null);
       return;
     }
 
-    const img = e.target.files[0];
-    if (img.size > 99999999) {
-      dispatch(setError(true));
-      dispatch(
-        setMessage(
-          "Photo is too big. It should be less than 5Kb and 80x80px size for better result."
-        )
-      );
-    } else {
-      setPhoto(img);
-      dispatch(setError(false));
-    }
+    const file = e.target.files[0];
+    setPhoto(file);
   };
 
-  return { uploadPhoto, handleChangePhoto, photo };
+  return { photo, handleChangePhoto };
 };
 
 export default useUploadPhoto;

@@ -6,9 +6,7 @@ import Main from "./Main";
 import Count from "./Count";
 
 const Home = () => {
-  return (
-    <div></div>
-  );
+  return <div className="text-black">jnjvabdsjasdba</div>;
 };
 
 export default Home;

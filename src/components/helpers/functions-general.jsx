@@ -1,5 +1,5 @@
-export const projectURL = "http://localhost/VITE-COCONUT";
-export const imgPath = "http://localhost/VITE-COCONUT/public/img";
+export const projectURL = "http://localhost/CAC";
+export const imgPath = "http://localhost/CAC/public/img";
 
 export const devApiUrl = `${projectURL}/rest`;
 export const devBaseUrl = `${projectURL}`;

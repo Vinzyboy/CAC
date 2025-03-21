@@ -24,11 +24,9 @@ const Count = () => {
     }
 
     try {
-      // Convert Base64 image to Blob (if needed)
       const blob = await fetch(photo).then((res) => res.blob());
       const formData = new FormData();
-      formData.append("image", blob, "coconut_detection_result.png");
-      formData.append("total_coconuts", totalCoconuts); // Send count as well
+      formData.append("image", blob, "coconut_detection.png");
 
       const response = await fetch("http://localhost:5000/upload", {
         method: "POST",
@@ -68,7 +66,9 @@ const Count = () => {
           {/* Display Image */}
           <div>
             <img
-              src={`data:image/png;base64, ${photo}` || `${imgPath}/banner1.png`}
+              src={
+                `data:image/png;base64, ${photo}` || `${imgPath}/banner1.png`
+              }
               alt="Detected Coconuts"
               className="h-[400px] border-2 border-white"
             />
@@ -88,14 +88,14 @@ const Count = () => {
           {/* Buttons: Save & Retry */}
           <div className="flex justify-end gap-3 mt-5">
             <button
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-green-900 text-white px-5 py-2 rounded hover:bg-green-700"
               type="button"
               onClick={handleSaveClick}
             >
               Save
             </button>
             <button
-              className="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700"
+              className="btn-cancel text-white px-5 py-2 rounded "
               onClick={handleRetryClick}
             >
               Retry
@@ -119,7 +119,7 @@ const Count = () => {
                 Yes
               </button>
               <button
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                className="btn-cancel text-white px-4 py-2 rounded"
                 onClick={handleCancel}
               >
                 No
