@@ -1,6 +1,7 @@
 import { imgPath } from "@/components/helpers/functions-general";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { fileSave } from 'browser-fs-access';
 
 const Count = () => {
   const location = useLocation();
@@ -17,31 +18,49 @@ const Count = () => {
     setShowModal(true);
   };
 
+  const saveBase64Image = async (base64String, filename = "coconut_detection.png") => {
+    try {
+      const byteCharacters = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
+      const blob = new Blob([byteCharacters], { type: "image/png" });
+
+      // Open save dialog
+      await fileSave(blob, {
+        fileName: filename,
+        extensions: ['.png'],
+        description: "png Image",
+        mimeTypes: ["image/png"],
+      });
+      console.log("File saved successfully!");
+    } catch (error) {
+        console.error("Error saving file:", error);
+    }
+  }
+
   const handleSaveClick = async () => {
     if (!photo) {
       alert("No image to save!");
       return;
     }
-
-    try {
-      const blob = await fetch(photo).then((res) => res.blob());
-      const formData = new FormData();
-      formData.append("image", blob, "coconut_detection.png");
-
-      const response = await fetch("http://localhost:5000/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        alert("Image saved successfully!");
-      } else {
-        alert("Failed to save image.");
-      }
-    } catch (error) {
-      console.error("Error saving image:", error);
-      alert("Error saving image.");
-    }
+    saveBase64Image(photo);
+//     try {
+//       const blob = await fetch(photo).then((res) => res.blob());
+//       const formData = new FormData();
+//       formData.append("image", blob, "coconut_detection.png");
+//
+//       const response = await fetch("http://localhost:5000/upload", {
+//         method: "POST",
+//         body: formData,
+//       });
+//
+//       if (response.ok) {
+//         alert("Image saved successfully!");
+//       } else {
+//         alert("Failed to save image.");
+//       }
+//     } catch (error) {
+//       console.error("Error saving image:", error);
+//       alert("Error saving image.");
+//     }
   };
 
   const handleConfirm = () => {
