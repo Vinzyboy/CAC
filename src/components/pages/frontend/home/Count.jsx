@@ -1,12 +1,14 @@
 import { imgPath } from "@/components/helpers/functions-general";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fileSave } from 'browser-fs-access';
+import { fileSave } from "browser-fs-access";
 
 const Count = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const photo = location.state?.photo || null; // Retrieved image
+  // const photo = location.state?.photo || null; // Retrieved image
+  const [image, setImage] = useState(location.state?.photo || null);
+
   const detections = location.state?.detections || []; // Coconut detection results
   const totalCoconuts = detections.length; // Count coconuts detected
 
@@ -18,49 +20,67 @@ const Count = () => {
     setShowModal(true);
   };
 
-  const saveBase64Image = async (base64String, filename = "coconut_detection.png") => {
+  const saveBase64Image = async (
+    base64String,
+    filename = "coconut_detection.png"
+  ) => {
     try {
-      const byteCharacters = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
+      const byteCharacters = Uint8Array.from(atob(base64String), (c) =>
+        c.charCodeAt(0)
+      );
       const blob = new Blob([byteCharacters], { type: "image/png" });
 
       // Open save dialog
       await fileSave(blob, {
         fileName: filename,
-        extensions: ['.png'],
+        extensions: [".png"],
         description: "png Image",
         mimeTypes: ["image/png"],
       });
       console.log("File saved successfully!");
     } catch (error) {
-        console.error("Error saving file:", error);
+      console.error("Error saving file:", error);
     }
-  }
+  };
+
+  // const handleSaveClick = async () => {
+  //   if (!photo) {
+  //     alert("No image to save!");
+  //     return;
+  //   }
+  //   saveBase64Image(photo);
+  //   //     try {
+  //   //       const blob = await fetch(photo).then((res) => res.blob());
+  //   //       const formData = new FormData();
+  //   //       formData.append("image", blob, "coconut_detection.png");
+  //   //
+  //   //       const response = await fetch("http://localhost:5000/upload", {
+  //   //         method: "POST",
+  //   //         body: formData,
+  //   //       });
+  //   //
+  //   //       if (response.ok) {
+  //   //         alert("Image saved successfully!");
+  //   //       } else {
+  //   //         alert("Failed to save image.");
+  //   //       }
+  //   //     } catch (error) {
+  //   //       console.error("Error saving image:", error);
+  //   //       alert("Error saving image.");
+  //   //     }
+  // };
 
   const handleSaveClick = async () => {
-    if (!photo) {
+    if (!image) {
       alert("No image to save!");
       return;
     }
-    saveBase64Image(photo);
-//     try {
-//       const blob = await fetch(photo).then((res) => res.blob());
-//       const formData = new FormData();
-//       formData.append("image", blob, "coconut_detection.png");
-//
-//       const response = await fetch("http://localhost:5000/upload", {
-//         method: "POST",
-//         body: formData,
-//       });
-//
-//       if (response.ok) {
-//         alert("Image saved successfully!");
-//       } else {
-//         alert("Failed to save image.");
-//       }
-//     } catch (error) {
-//       console.error("Error saving image:", error);
-//       alert("Error saving image.");
-//     }
+
+    await saveBase64Image(image);
+
+    // Clear the image after saving
+    setImage(null);
+    alert("Image saved successfully!");
   };
 
   const handleConfirm = () => {
@@ -86,7 +106,9 @@ const Count = () => {
           <div>
             <img
               src={
-                `data:image/png;base64, ${photo}` || `${imgPath}/banner1.png`
+                image
+                  ? `data:image/png;base64, ${image}`
+                  : `${imgPath}/banner1.png`
               }
               alt="Detected Coconuts"
               className="h-[400px] border-2 border-white"
